@@ -65,6 +65,8 @@ namespace ECommerce.ApplicationTest
             customerServiceMock.Setup(c => c.Update(It.IsAny<int>(), It.IsAny<CreateCustomerDTO>())).Callback((int id, CreateCustomerDTO customerDto) =>
             {
                 var customer = list.FirstOrDefault(c => c.Id == id);
+                if (customer == null)
+                    throw new Exception("Not Found");
                 list.Remove(customer);
                 _customer.Id = id;
                 _customer.Name = customerDto.Name;
@@ -87,8 +89,11 @@ namespace ECommerce.ApplicationTest
 
 
 
-        [Fact]
-        public void Delete_Customer_By_Id_Test()
+        [Theory]
+        [InlineData(1)]
+        [InlineData(3)]
+        [InlineData(5)]
+        public void Delete_Customer_By_Id_Test(int identity)
         {
             //Arrange
             var customerServiceMock = new Mock<ICustomerService>();
@@ -99,18 +104,22 @@ namespace ECommerce.ApplicationTest
             customerServiceMock.Setup(c => c.Delete(It.IsAny<int>())).Callback((int id) =>
             {
                 var customer = list.FirstOrDefault(c=>c.Id==id);
+                if (customer == null)
+                    throw new Exception("Not Found");
                 list.Remove(customer);
             });
 
             ICustomerService customerService = customerServiceMock.Object;
             
             //Act
-            customerService.Delete(1);
+            customerService.Delete(identity);
 
             //Assert
             int afterDeleteSize = list.Count;
             Assert.True(beforeDeleteSize>afterDeleteSize);
-            Assert.DoesNotContain<Customer>(list.FirstOrDefault(c => c.Id == 1),list);
+            Assert.DoesNotContain<Customer>(list.FirstOrDefault(c => c.Id == identity),list);
+            //if (identity > 5)
+            //    Assert.Throws<Exception>();
         }
 
         [Theory]
