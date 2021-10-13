@@ -27,6 +27,13 @@ namespace ECommerce.Api.Controllers
             return Ok(new { status = true, errors = "" });
         }
 
+        [HttpPut]
+        public IActionResult Update([FromQuery] int id,[FromBody] CreateCustomerDTO customer)
+        {
+            _customerService.Update(id,customer);
+            return Ok(new { status = true, errors = "" });
+        }
+
         [HttpPost("{id}")]
         public IActionResult Delete(int id)
         {
@@ -38,21 +45,24 @@ namespace ECommerce.Api.Controllers
         public IActionResult GetAll()
         {
             var getAll = _customerService.GetAll();
-            return Ok(new { status = true, data = getAll, errors = "" });
+            //return Ok(new { status = true, data = getAll, errors = "" });
+           return Ok(getAll);
         }
 
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
             var getById =_customerService.GetById(id);
-            return Ok(new { status = true, data = getById, errors = "" });
+            //return Ok(new { status = true, data = getById, errors = "" });
+            return Ok(getById);
         }
 
         [HttpPut("{id}")]
         public IActionResult Delete(int id,[FromBody] CreateCustomerDTO customer)
         {
             _customerService.Update(id,customer);
-            return Ok(new { status = true, errors = "" });
+            //return Ok(new { status = true, errors = "" });
+            return Ok();
         }
     }
 }

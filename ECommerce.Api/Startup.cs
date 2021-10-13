@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using ECommerce.Infrastructure.Context;
 using ECommerce.Application;
+using Serilog;
 
 namespace ECommerce.Api
 {
@@ -50,6 +51,7 @@ namespace ECommerce.Api
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "ECommerce.Api v1"));
             }
+            app.UseSerilogRequestLogging();
 
             app.UseHttpsRedirection();
 
